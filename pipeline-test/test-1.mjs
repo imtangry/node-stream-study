@@ -1,4 +1,5 @@
 // 解决 contentjs里面的 一些疑问
+// 验证 pipeline 管道的起点是否只能是第一个节点
 import { pipeline,  Duplex, Writable } from 'readable-stream';
 import ObjectMultiplex from '@metamask/object-multiplex';
 
@@ -59,7 +60,7 @@ const pageStream = new TestChannel();
 const pageMux = new ObjectMultiplex();
 pageMux.setMaxListeners(25);
 
-//这里 第二个 pageMux 只处理 write 事件么，这也是当初的一个疑问；pageChannel的write按道理都会触发这两个的push事件 我们可以继续实验（把第一个pageMux去掉即可）
+//这里 第二个 pageMux 只处理 write 事件么，这也是当初的一个疑问；pageChannel的write按道理都会触发这两个的push事件 我们可以继续实验（把第一个pageMux去掉即可, 或者在最后加一个TestWritable）
 pipeline(pageMux, pageStream, pageMux, (err) =>
     console.log('pipeline ended with error:', err)
 );
